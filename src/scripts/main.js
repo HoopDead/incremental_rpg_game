@@ -48,6 +48,12 @@ let newItems = {
   }
 };
 
+//Fight section
+
+$("#startfight").click(function() {
+  console.log("Start fight!");
+});
+
 shop = Object.assign({}, shop, newItems);
 
 console.table(shop);
