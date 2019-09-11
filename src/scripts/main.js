@@ -1,15 +1,23 @@
 //Main character section
 
-const main_character = {
+var main_character = {
   level: 1,
-  coins: 100,
-  profession: "none",
+  coins: 0,
   strenght: 0,
   agility: 0,
   inteligence: 0,
   defence: 0,
-  luck: 0,
-  hp: 100
+  luck: 3,
+  hp: 100,
+  getDamageCharacter: function() {
+    return (
+      (this.level * 2 +
+        this.strenght * 0.4 +
+        this.inteligence * 0.4 +
+        this.agility * 0.35) *
+      this.luck
+    );
+  }
 };
 
 //Enemy section
@@ -22,7 +30,16 @@ var enemy = {
   inteligence: 3,
   defence: 9,
   luck: 3,
-  hp: 25
+  hp: 25,
+  getDamageEnemy: function() {
+    return (
+      (this.level * 1.5 +
+        this.strenght * 0.2 +
+        this.inteligence * 0.2 +
+        this.agility * 0.15) *
+      (0.5 * this.luck)
+    );
+  }
 };
 
 //Shop section
@@ -52,8 +69,13 @@ let newItems = {
 
 $("#startfight").click(function() {
   console.log("Start fight!");
+  fight();
 });
+
+let fight = () => {};
 
 shop = Object.assign({}, shop, newItems);
 
-console.table(shop);
+console.log(
+  main_character.getDamageCharacter() + " " + Math.floor(enemy.getDamageEnemy())
+);
