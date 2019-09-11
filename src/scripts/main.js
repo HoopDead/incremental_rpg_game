@@ -9,4 +9,20 @@ const main_character = {
   luck: 0
 };
 
+var shop = {
+  item1: {
+    name: "Long Sword",
+    cost: 100
+  }
+};
 
+let newItems = {
+  item1: {
+    name: "Wooden Sword",
+    cost: 5009
+  }
+};
+
+shop = Object.assign({}, shop, newItems);
+
+console.table(shop);
