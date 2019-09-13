@@ -119,14 +119,14 @@ let newItems = {
 //Fight section
 
 $("#startfight").click(function() {
-  console.log("Start fight!");
-  console.log("================");
-  fight(game.round);
+  if (!game.isFight) {
+    console.log("Start fight!");
+    console.log("================");
+    game.isFight = true;
+  } else {
+    console.log("Fight started!");
+  }
 });
-
-let fight = (round, isFight) => {
-  game.isFight = true;
-};
 
 $("#basicattack").click(function() {
   if (game.isFight == true) {
