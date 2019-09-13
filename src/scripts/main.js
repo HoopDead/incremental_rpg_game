@@ -2,7 +2,17 @@
 
 var game = {
   isFight: false,
-  round: 0
+  round: 0,
+  winner: null,
+  refill: function() {
+    console.log("Refillowanie w trakcie...");
+    player.hp[0] = player.hp[1];
+    enemy.hp[0] = enemy.hp[1];
+    if (this.winner == "Player") {
+      player.nextGeneration();
+      enemy.nextGeneration();
+    }
+  }
 };
 
 //Main character section
@@ -15,7 +25,7 @@ var player = {
   inteligence: 0,
   defence: 0,
   luck: 3,
-  hp: 100,
+  hp: [100, 100],
   getDamage: function() {
     return (
       Math.floor(
@@ -27,9 +37,15 @@ var player = {
     );
   },
   checkHp: function() {
-    if (this.hp <= 0) {
-      console.log("Player dies");
+    if (this.hp[0] <= 0) {
+      game.refill();
+      game.winner = "Enemy";
       game.isFight = false;
+      console.log("Player die. Winner is: " + game.winner);
+    } else {
+      enemy.hp[0] -= this.getDamage();
+      console.log("Player uses basic attack: " + this.getDamage());
+      console.log("Enemy hp: " + enemy.hp[0]);
     }
   }
 };
@@ -44,7 +60,7 @@ var enemy = {
   inteligence: 3,
   defence: 9,
   luck: 3,
-  hp: 25,
+  hp: [25, 25],
   getDamage: function() {
     return (
       Math.floor(
@@ -57,9 +73,15 @@ var enemy = {
     );
   },
   checkHp: function() {
-    if (this.hp <= 0) {
-      console.log("Enemy die.");
+    if (this.hp[0] <= 0) {
+      game.refill();
+      game.winner = "Player";
       game.isFight = false;
+      console.log("Enemy die. Winner is: " + game.winner);
+    } else {
+      player.hp[0] -= this.getDamage();
+      console.log("Enemy uses basic attack: " + this.getDamage());
+      console.log("Player hp: " + player.hp[0]);
     }
   }
 };
@@ -96,34 +118,17 @@ $("#startfight").click(function() {
 });
 
 let fight = (round, isFight) => {
-  console.log("Runda: " + (game.round + 1));
-  var turn =
-    game.round % 2 === 0 ? console.log("Player") : console.log("Enemy");
   game.isFight = true;
 };
 
 $("#basicattack").click(function() {
   if (game.isFight == true) {
-    console.log(
-      "Player uses basic atack: " + Math.floor(player.getDamage())
-    );
-    game.round++;
-    enemy.hp -= player.getDamage();
-    console.log("Enemy hp: " + enemy.hp);
+    player.checkHp();
     enemy.checkHp();
-    enemyMove();
   } else {
     console.log("Start fight first!");
   }
 });
-
-let enemyMove = () => {
-  console.log("Enemy uses basic atack: " + enemy.getDamage());
-  game.round++;
-  player.hp -= enemy.getDamage();
-  console.log("Player hp: " + player.hp);
-  player.checkHp();
-};
 
 //Sekcja testowa
 shop = Object.assign({}, shop, newItems);
