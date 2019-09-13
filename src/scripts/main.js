@@ -6,12 +6,15 @@ var game = {
   winner: null,
   refill: function() {
     console.log("Refillowanie w trakcie...");
-    player.hp[0] = player.hp[1];
-    enemy.hp[0] = enemy.hp[1];
     if (this.winner == "Player") {
       console.log("Next gen start");
       player.nextGeneration();
       enemy.nextGeneration();
+      player.hp[0] = player.hp[1];
+      enemy.hp[0] = enemy.hp[1];
+    } else {
+      player.hp[0] = player.hp[1];
+      enemy.hp[0] = enemy.hp[1];
     }
   }
 };
@@ -26,7 +29,7 @@ var player = {
   inteligence: 0,
   defence: 0,
   luck: 3,
-  hp: [100, 100],
+  hp: [30, 30],
   getDamage: function() {
     return (
       Math.floor(
@@ -51,6 +54,13 @@ var player = {
   },
   nextGeneration: function() {
     console.log("Next generation - Player");
+    this.level++;
+    this.coins = enemy.drop_coins + enemy.level * getRandom();
+    this.strenght += getRandom();
+    this.agility += getRandom();
+    this.inteligence += getRandom();
+    this.luck += getRandom();
+    this.hp[1] = this.hp[1] * this.level;
   }
 };
 
@@ -89,7 +99,15 @@ var enemy = {
     }
   },
   nextGeneration: function() {
-    console.log("Next generation - enemy");
+    console.log("Next generation - Enemy");
+    this.level++;
+    this.drop_coins =
+      this.drop_coins + (this.level + player.level) * getRandom();
+    this.strenght += getRandom();
+    this.agility += getRandom();
+    this.inteligence += getRandom();
+    this.luck += getRandom();
+    this.hp[1] = this.hp[1] * this.level;
   }
 };
 
@@ -141,5 +159,5 @@ $("#basicattack").click(function() {
 shop = Object.assign({}, shop, newItems);
 
 function getRandom() {
-  return Math.floor(Math.random() * 5, 1);
+  return Math.floor(Math.random() * 5 + 1);
 }
