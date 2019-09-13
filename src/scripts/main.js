@@ -9,6 +9,7 @@ var game = {
     player.hp[0] = player.hp[1];
     enemy.hp[0] = enemy.hp[1];
     if (this.winner == "Player") {
+      console.log("Next gen start");
       player.nextGeneration();
       enemy.nextGeneration();
     }
@@ -38,15 +39,18 @@ var player = {
   },
   checkHp: function() {
     if (this.hp[0] <= 0) {
-      game.refill();
       game.winner = "Enemy";
       game.isFight = false;
       console.log("Player die. Winner is: " + game.winner);
+      game.refill();
     } else {
       enemy.hp[0] -= this.getDamage();
       console.log("Player uses basic attack: " + this.getDamage());
       console.log("Enemy hp: " + enemy.hp[0]);
     }
+  },
+  nextGeneration: function() {
+    console.log("Next generation - Player");
   }
 };
 
@@ -74,15 +78,18 @@ var enemy = {
   },
   checkHp: function() {
     if (this.hp[0] <= 0) {
-      game.refill();
       game.winner = "Player";
       game.isFight = false;
       console.log("Enemy die. Winner is: " + game.winner);
+      game.refill();
     } else {
       player.hp[0] -= this.getDamage();
       console.log("Enemy uses basic attack: " + this.getDamage());
       console.log("Player hp: " + player.hp[0]);
     }
+  },
+  nextGeneration: function() {
+    console.log("Next generation - enemy");
   }
 };
 
@@ -132,3 +139,7 @@ $("#basicattack").click(function() {
 
 //Sekcja testowa
 shop = Object.assign({}, shop, newItems);
+
+function getRandom() {
+  return Math.floor(Math.random() * 5, 1);
+}
