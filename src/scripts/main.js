@@ -108,7 +108,8 @@ var enemy = {
     this.inteligence += getRandom();
     this.luck += getRandom();
     this.hp[1] = this.hp[1] * this.level;
-  }
+  },
+  spells: [{ id: 0, name: "Fireball", damage: "5" }]
 };
 
 //Shop section
