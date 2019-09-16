@@ -29,29 +29,8 @@ var player = {
   inteligence: 0,
   defence: 0,
   luck: 3,
-  hp: [30, 30],
-  getDamage: function() {
-    return (
-      Math.floor(
-        this.level * 2 +
-          this.strenght * 0.4 +
-          this.inteligence * 0.4 +
-          this.agility * 0.35
-      ) * this.luck
-    );
-  },
-  checkHp: function() {
-    if (this.hp[0] <= 0) {
-      game.winner = "Enemy";
-      game.isFight = false;
-      console.log("Player die. Winner is: " + game.winner);
-      game.refill();
-    } else {
-      enemy.hp[0] -= this.getDamage();
-      console.log("Player uses basic attack: " + this.getDamage());
-      console.log("Enemy hp: " + enemy.hp[0]);
-    }
-  },
+  hp: [30, 30], //First value - hp till fight. Second value - max hp.
+  moves: [{ id: 0, name: "Basic attack" }],
   nextGeneration: function() {
     console.log("Next generation - Player");
     this.level++;
@@ -74,30 +53,11 @@ var enemy = {
   inteligence: 3,
   defence: 9,
   luck: 3,
-  hp: [25, 25],
-  getDamage: function() {
-    return (
-      Math.floor(
-        this.level * 1.5 +
-          this.strenght * 0.2 +
-          this.inteligence * 0.2 +
-          this.agility * 0.15
-      ) *
-      (0.5 * this.luck)
-    );
-  },
-  checkHp: function() {
-    if (this.hp[0] <= 0) {
-      game.winner = "Player";
-      game.isFight = false;
-      console.log("Enemy die. Winner is: " + game.winner);
-      game.refill();
-    } else {
-      player.hp[0] -= this.getDamage();
-      console.log("Enemy uses basic attack: " + this.getDamage());
-      console.log("Player hp: " + player.hp[0]);
-    }
-  },
+  hp: [25, 25], //First value - hp till fight. Second value - max hp.
+  moves: [
+    { id: 0, name: "Fireball", damage: 1 },
+    { id: 1, name: "Furious Light", damage: 2 }
+  ],
   nextGeneration: function() {
     console.log("Next generation - Enemy");
     this.level++;
@@ -108,8 +68,7 @@ var enemy = {
     this.inteligence += getRandom();
     this.luck += getRandom();
     this.hp[1] = this.hp[1] * this.level;
-  },
-  spells: [{ id: 0, name: "Fireball", damage: "5" }]
+  }
 };
 
 //Shop section
@@ -149,16 +108,53 @@ $("#startfight").click(function() {
 
 $("#basicattack").click(function() {
   if (game.isFight == true) {
-    player.checkHp();
-    enemy.checkHp();
+    fight();
   } else {
     console.log("Start fight first!");
   }
 });
 
+const fight = () => {
+  let playerMove =
+    player.moves[Math.floor(Math.random() * player.moves.length)];
+  let enemyMove = enemy.moves[Math.floor(Math.random() * enemy.moves.length)];
+  let randPlayerDamage = randomizePlayerDamage();
+  let randEnemyDamage = randomizeEnemyDamage();
+  console.log("Player dmg: " + randPlayerDamage);
+  player.hp[0] -= randEnemyDamage;
+  enemy.hp[0] -= randPlayerDamage;
+  console.log("Player: " + player.hp[0]);
+  console.log("Enemy: " + enemy.hp[0]);
+  if (player.hp[0] <= 0) {
+    console.log("Player dead.");
+  } else if (enemy.hp[0] <= 0) {
+    console.log("Enemy dead.");
+  }
+
+  //Enemy move
+};
+
 //Sekcja testowa
 shop = Object.assign({}, shop, newItems);
 
-function getRandom() {
+const getRandom = function() {
   return Math.floor(Math.random() * 5 + 1);
-}
+};
+
+const randomizePlayerDamage = function() {
+  return (
+    (player.strenght + player.agility + player.inteligence + player.luck) *
+    0.25 *
+    player.level *
+    getRandom()
+  );
+};
+
+const randomizeEnemyDamage = function() {
+  return (
+    (enemy.strenght + enemy.agility + enemy.inteligence + enemy.luck) *
+    0.25 *
+    enemy.level *
+    getRandom()
+  );
+};
