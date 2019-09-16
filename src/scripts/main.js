@@ -2,19 +2,23 @@
 
 var game = {
   isFight: false,
-  round: 0,
+  round: 1,
   winner: null,
   refill: function() {
     console.log("Refillowanie w trakcie...");
+    this.isFight = false;
+    this.round++;
     if (this.winner == "Player") {
       console.log("Next gen start");
       player.nextGeneration();
       enemy.nextGeneration();
       player.hp[0] = player.hp[1];
       enemy.hp[0] = enemy.hp[1];
+      this.winner = null;
     } else {
       player.hp[0] = player.hp[1];
       enemy.hp[0] = enemy.hp[1];
+      this.winner = null;
     }
   }
 };
@@ -24,13 +28,19 @@ var game = {
 var player = {
   level: 1,
   coins: 0,
-  strenght: 0,
-  agility: 0,
-  inteligence: 0,
-  defence: 0,
+  strenght: 5,
+  agility: 5,
+  inteligence: 5,
+  defence: 5,
   luck: 3,
-  hp: [30, 30], //First value - hp till fight. Second value - max hp.
-  moves: [{ id: 0, name: "Basic attack" }],
+  hp: [100, 100], //First value - hp till fight. Second value - max hp.
+  stats: [{ name: "strenght", value: 5, cost: 10 }],
+  moves: [
+    { id: 0, name: "Basic attack", damage: 3 },
+    { id: 1, name: "Lava Spike", damage: 7 },
+    { id: 2, name: "Blast of Renewal", damage: 4 },
+    { id: 3, name: "Energy Arrow", damage: 5 }
+  ],
   nextGeneration: function() {
     console.log("Next generation - Player");
     this.level++;
@@ -53,10 +63,13 @@ var enemy = {
   inteligence: 3,
   defence: 9,
   luck: 3,
-  hp: [25, 25], //First value - hp till fight. Second value - max hp.
+  hp: [125, 125], //First value - hp till fight. Second value - max hp.
   moves: [
-    { id: 0, name: "Fireball", damage: 1 },
-    { id: 1, name: "Furious Light", damage: 2 }
+    { id: 0, name: "Basic attack", damage: 1 },
+    { id: 1, name: "Furious Light", damage: 2 },
+    { id: 2, name: "Fireball", damage: 4 },
+    { id: 3, name: "Blazing Charge", damage: 3 },
+    { id: 4, name: "Assault of Chaotic Energy", damage: 6 }
   ],
   nextGeneration: function() {
     console.log("Next generation - Enemy");
@@ -98,11 +111,7 @@ let newItems = {
 
 $("#startfight").click(function() {
   if (!game.isFight) {
-    console.log("Start fight!");
-    console.log("================");
     game.isFight = true;
-  } else {
-    console.log("Fight started!");
   }
 });
 
@@ -118,16 +127,37 @@ const fight = () => {
   let playerMove =
     player.moves[Math.floor(Math.random() * player.moves.length)];
   let enemyMove = enemy.moves[Math.floor(Math.random() * enemy.moves.length)];
-  let randPlayerDamage = randomizePlayerDamage();
-  let randEnemyDamage = randomizeEnemyDamage();
-  console.log("Player dmg: " + randPlayerDamage);
+  let randPlayerDamage = randomizePlayerDamage() * playerMove.damage;
+  let randEnemyDamage = randomizeEnemyDamage() * enemyMove.damage;
   player.hp[0] -= randEnemyDamage;
   enemy.hp[0] -= randPlayerDamage;
-  console.log("Player: " + player.hp[0]);
-  console.log("Enemy: " + enemy.hp[0]);
+  console.log(
+    "[Round " +
+      game.round +
+      "] Player uses: " +
+      playerMove.name +
+      " and took: " +
+      randPlayerDamage +
+      " enemy HP is: " +
+      enemy.hp[0]
+  );
+  console.log(
+    "[Round " +
+      game.round +
+      "] " +
+      enemyMove.name +
+      " and took: " +
+      randEnemyDamage +
+      " player HP is: " +
+      player.hp[0]
+  );
   if (player.hp[0] <= 0) {
+    game.winner = "Enemy";
+    game.refill();
     console.log("Player dead.");
   } else if (enemy.hp[0] <= 0) {
+    game.winner = "Player";
+    game.refill();
     console.log("Enemy dead.");
   }
 
@@ -138,23 +168,30 @@ const fight = () => {
 shop = Object.assign({}, shop, newItems);
 
 const getRandom = function() {
-  return Math.floor(Math.random() * 5 + 1);
+  return Math.floor(Math.random() * 5);
+};
+
+const getRandomDamage = function() {
+  return Math.floor(
+    Math.random() * (player.level + player.strenght - player.level) +
+      player.level
+  );
 };
 
 const randomizePlayerDamage = function() {
-  return (
-    (player.strenght + player.agility + player.inteligence + player.luck) *
-    0.25 *
-    player.level *
-    getRandom()
+  return Math.floor(
+    player.strenght +
+      player.agility +
+      player.inteligence +
+      player.luck * 0.5 * player.level * getRandomDamage()
   );
 };
 
 const randomizeEnemyDamage = function() {
-  return (
-    (enemy.strenght + enemy.agility + enemy.inteligence + enemy.luck) *
-    0.25 *
-    enemy.level *
-    getRandom()
+  return Math.floor(
+    enemy.strenght +
+      enemy.agility +
+      enemy.inteligence +
+      enemy.luck * 0.2 * enemy.level * getRandomDamage()
   );
 };
