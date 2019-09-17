@@ -28,11 +28,6 @@ var game = {
 var player = {
   level: 1,
   coins: 0,
-  strenght: 5,
-  agility: 5,
-  inteligence: 5,
-  defence: 5,
-  luck: 3,
   hp: [100, 100], //First value - hp till fight. Second value - max hp.
   stats: [
     { name: "strenght", value: 5, cost: 10 },
@@ -50,11 +45,10 @@ var player = {
     console.log("Next generation - Player");
     this.level++;
     this.coins = enemy.drop_coins + enemy.level * getRandom();
-    this.strenght += getRandom();
-    this.agility += getRandom();
-    this.inteligence += getRandom();
-    this.luck += getRandom();
     this.hp[1] = this.hp[1] * this.level;
+    for (let i = 0; i < this.stats.length; i++) {
+      this.stats[i].value += getRandom();
+    }
   }
 };
 
@@ -63,12 +57,13 @@ var player = {
 var enemy = {
   level: 2,
   drop_coins: 150,
-  strenght: 3,
-  agility: 5,
-  inteligence: 3,
-  defence: 9,
-  luck: 3,
   hp: [125, 125], //First value - hp till fight. Second value - max hp.
+  stats: [
+    { name: "strenght", value: 5, cost: 10 },
+    { name: "agility", value: 5, cost: 10 },
+    { name: "inteligence", value: 5, cost: 10 },
+    { name: "luck", value: 5, cost: 10 }
+  ],
   moves: [
     { id: 0, name: "Basic attack", damage: 1 },
     { id: 1, name: "Furious Light", damage: 2 },
@@ -81,11 +76,10 @@ var enemy = {
     this.level++;
     this.drop_coins =
       this.drop_coins + (this.level + player.level) * getRandom();
-    this.strenght += getRandom();
-    this.agility += getRandom();
-    this.inteligence += getRandom();
-    this.luck += getRandom();
     this.hp[1] = this.hp[1] * this.level;
+    for (let i = 0; i < this.stats.length; i++) {
+      this.stats[i].value += getRandom();
+    }
   }
 };
 
@@ -176,37 +170,18 @@ const getRandom = function() {
   return Math.floor(Math.random() * 5);
 };
 
-const getRandomDamage = function() {
-  return Math.floor(
-    Math.random() * (player.level + player.strenght - player.level) +
-      player.level
-  );
-};
-
 const randomizePlayerDamage = function() {
-  return Math.floor(
-    player.strenght +
-      player.agility +
-      player.inteligence +
-      player.luck * 0.5 * player.level * getRandomDamage()
-  );
+  let finalDamage = 0;
+  for (let i = 0; i < player.stats.length; i++) {
+    finalDamage += player.stats[i].value;
+  }
+  return Math.floor(finalDamage * 0.1 * player.level * getRandom());
 };
 
 const randomizeEnemyDamage = function() {
-  return Math.floor(
-    enemy.strenght +
-      enemy.agility +
-      enemy.inteligence +
-      enemy.luck * 0.2 * enemy.level * getRandomDamage()
-  );
-};
-
-function test() {
-  for (let i = 0; i < player.stats.length; i++) {
-    console.log("Before: ");
-    console.log(player.stats[i]);
-    console.log("After: ");
-    player.stats[i].value += getRandom();
-    console.log(player.stats[i]);
+  let finalDamage = 0;
+  for (let i = 0; i < enemy.stats.length; i++) {
+    finalDamage += enemy.stats[i].value;
   }
-}
+  return Math.floor(finalDamage * 0.1 * enemy.level * getRandom());
+};
