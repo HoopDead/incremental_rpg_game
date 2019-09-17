@@ -34,7 +34,12 @@ var player = {
   defence: 5,
   luck: 3,
   hp: [100, 100], //First value - hp till fight. Second value - max hp.
-  stats: [{ name: "strenght", value: 5, cost: 10 }],
+  stats: [
+    { name: "strenght", value: 5, cost: 10 },
+    { name: "agility", value: 5, cost: 10 },
+    { name: "inteligence", value: 5, cost: 10 },
+    { name: "luck", value: 5, cost: 10 }
+  ],
   moves: [
     { id: 0, name: "Basic attack", damage: 3 },
     { id: 1, name: "Lava Spike", damage: 7 },
@@ -144,7 +149,7 @@ const fight = () => {
   console.log(
     "[Round " +
       game.round +
-      "] " +
+      "] Enemy uses: " +
       enemyMove.name +
       " and took: " +
       randEnemyDamage +
@@ -195,3 +200,13 @@ const randomizeEnemyDamage = function() {
       enemy.luck * 0.2 * enemy.level * getRandomDamage()
   );
 };
+
+function test() {
+  for (let i = 0; i < player.stats.length; i++) {
+    console.log("Before: ");
+    console.log(player.stats[i]);
+    console.log("After: ");
+    player.stats[i].value += getRandom();
+    console.log(player.stats[i]);
+  }
+}
