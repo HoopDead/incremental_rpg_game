@@ -23,6 +23,12 @@ var game = {
   }
 };
 
+let replaceStr = object =>
+{
+  let res = JSON.stringify(object);
+  console.log(res);
+}
+
 //Main character section
 
 var player = {
@@ -39,7 +45,8 @@ var player = {
     { id: 0, name: "Basic attack", damage: 3 },
     { id: 1, name: "Lava Spike", damage: 7 },
     { id: 2, name: "Blast of Renewal", damage: 4 },
-    { id: 3, name: "Energy Arrow", damage: 5 }
+    { id: 3, name: "Energy Arrow", damage: 5 },
+    { id: 4, name: "Acid Orb", damage: 2 }
   ],
   nextGeneration: function() {
     console.log("Next generation - Player");
@@ -84,32 +91,26 @@ var enemy = {
 };
 
 //Shop section
-var shop = {
-  item1: {
-    name: "Long Sword",
-    cost: 100
-  },
-  item2: {
-    name: "Bow",
-    cost: 100
-  },
-  item3: {
-    name: "Magic Wand",
-    cost: 100
-  }
-};
+var shop = [
+  { id: 0, name: "Long Sword", value: 3},
+  { id: 1, name: "Archery Bow", value: 3},
+  { id: 2, name: "Magic Wand", value: 3}
+]
 
-let newItems = {
-  item1: {
-    name: "Wooden Sword",
-    cost: 5009
-  }
-};
+let replaceItem = () =>
+{
+
+}
+
+shop.forEach(function(item){
+  replaceStr(item);
+})
 
 //Fight section
 
 $("#startfight").click(function() {
   if (!game.isFight) {
+    console.log("Fight start.")
     game.isFight = true;
   }
 });
