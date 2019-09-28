@@ -23,12 +23,6 @@ var game = {
   }
 };
 
-let replaceStr = object =>
-{
-  let res = JSON.stringify(object);
-  console.log(res);
-}
-
 //Main character section
 
 var player = {
@@ -45,8 +39,7 @@ var player = {
     { id: 0, name: "Basic attack", damage: 3 },
     { id: 1, name: "Lava Spike", damage: 7 },
     { id: 2, name: "Blast of Renewal", damage: 4 },
-    { id: 3, name: "Energy Arrow", damage: 5 },
-    { id: 4, name: "Acid Orb", damage: 2 }
+    { id: 3, name: "Energy Arrow", damage: 5 }
   ],
   nextGeneration: function() {
     console.log("Next generation - Player");
@@ -92,25 +85,31 @@ var enemy = {
 
 //Shop section
 var shop = [
-  { id: 0, name: "Long Sword", value: 3},
-  { id: 1, name: "Archery Bow", value: 3},
-  { id: 2, name: "Magic Wand", value: 3}
-]
+  { id: 0, name: "Long Sword", cost: 100, value: 3},
+  { id: 1, name: "Archery Bow", cost: 100, value: 3},
+  { id: 2, name: "Magic Wand", cost: 100, value: 3}
+];
 
-let replaceItem = () =>
-{
 
+
+const displayShop = object => {
+  $("#shop").append(object.name + " " + object.cost + `<button id = ${object.id} class = 'itemBuy'>Buy</button>` + "<br>");
 }
 
-shop.forEach(function(item){
-  replaceStr(item);
+
+shop.forEach(function(item) {
+  displayShop(item);
 })
+
+$(".itemBuy").click(function(event){
+  console.log(event.target.id);
+});
 
 //Fight section
 
 $("#startfight").click(function() {
   if (!game.isFight) {
-    console.log("Fight start.")
+    console.log("Started!");
     game.isFight = true;
   }
 });
@@ -165,8 +164,6 @@ const fight = () => {
 };
 
 //Sekcja testowa
-shop = Object.assign({}, shop, newItems);
-
 const getRandom = function() {
   return Math.floor(Math.random() * 5);
 };
