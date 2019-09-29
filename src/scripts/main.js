@@ -30,16 +30,32 @@ var player = {
   coins: 0,
   hp: [100, 100], //First value - hp till fight. Second value - max hp.
   stats: [
-    { name: "strenght", value: 5, cost: 10 },
-    { name: "agility", value: 5, cost: 10 },
-    { name: "inteligence", value: 5, cost: 10 },
-    { name: "luck", value: 5, cost: 10 }
+    { name: "strenght", value: 0, cost: 10 },
+    { name: "agility", value: 0, cost: 10 },
+    { name: "inteligence", value: 0, cost: 10 },
+    { name: "luck", value: 0, cost: 10 }
   ],
   moves: [
     { id: 0, name: "Basic attack", damage: 3 },
     { id: 1, name: "Lava Spike", damage: 7 },
     { id: 2, name: "Blast of Renewal", damage: 4 },
     { id: 3, name: "Energy Arrow", damage: 5 }
+  ],
+  equpiment: [
+    { id: 0, name: "Empty", cost: 0, strenght: 0, damage: 0},
+    { id: 1, name: "Empty", cost: 0, strenght: 0, damage: 0},
+    { id: 2, name: "Empty", cost: 0, strenght: 0, damage: 0},
+    { id: 3, name: "Empty", cost: 0, strenght: 0, damage: 0},
+    { id: 4, name: "Empty", cost: 0, strenght: 0, damage: 0},
+    { id: 5, name: "Empty", cost: 0, strenght: 0, damage: 0},
+  ],
+  wearing: [
+    { id: 0, name: "Empty", cost: 0, strenght: 0, damage: 0},
+    { id: 1, name: "Empty", cost: 0, strenght: 0, damage: 0},
+    { id: 2, name: "Empty", cost: 0, strenght: 0, damage: 0},
+    { id: 3, name: "Empty", cost: 0, strenght: 0, damage: 0},
+    { id: 4, name: "Empty", cost: 0, strenght: 0, damage: 0},
+    { id: 5, name: "Empty", cost: 0, strenght: 0, damage: 0},
   ],
   nextGeneration: function() {
     console.log("Next generation - Player");
@@ -49,7 +65,10 @@ var player = {
     for (let i = 0; i < this.stats.length; i++) {
       this.stats[i].value += getRandom();
     }
-  }
+  },
+  showEq: function(id, name, strenght) {
+      $("#equipment" + id).html("Nazwa: " + name + "Strength: " + strenght);
+  },
 };
 
 //Enemy section
@@ -84,26 +103,51 @@ var enemy = {
 };
 
 //Shop section
+
+//Shop object
 var shop = [
-  { id: 0, name: "Long Sword", cost: 100, value: 3},
-  { id: 1, name: "Archery Bow", cost: 100, value: 3},
-  { id: 2, name: "Magic Wand", cost: 100, value: 3}
+  { id: 0, name: "Long Sword", cost: 100, strenght: 3, damage: 3},
+  { id: 1, name: "Leather Helmet", cost: 100, strenght: 2, damage: 0},
+  { id: 2, name: "Leather Chestplate", cost: 100, strenght: 3, damage: 0},
+  { id: 3, name: "Leather Pants", cost: 100, strenght: 2},
+  { id: 4, name: "Leather Boots", cost: 100, strenght: 1},
+  { id: 5, name: "Iron Amulet", cost: 500, strenght: 5}
 ];
 
 
-
+//Display shop items
 const displayShop = object => {
-  $("#shop").append(object.name + " " + object.cost + `<button id = ${object.id} class = 'itemBuy'>Buy</button>` + "<br>");
+  $("#shop").append(`<a id = ${object.id} class = 'itemBuy'>` + object.name + " " + object.cost + `</a>` + "<br>");
 }
 
-
+//Loop to use shop display function
 shop.forEach(function(item) {
   displayShop(item);
 })
 
+//New item function - used when player buy item
+const newItem = id => {
+  shop[id] = { id: Number(id), name: "Wooden sword", cost: 999, strenght: 5, damage: 3}
+  $("#" + id).html(shop[id].name + " " + shop[id].cost);
+};
+
+//Click on item - buy algorithm
 $(".itemBuy").click(function(event){
-  console.log(event.target.id);
+  if(player.equpiment.length < 7)
+  {
+    console.log("Buy");
+    let e = event.target.id
+    player.equpiment[e] = shop[e];
+    $("#equipment" + e).html("Nazwa: " + shop[e].name + "Strenght: " + shop[e].strenght);
+    newItem(e);
+  }
+  else
+  {
+    alert("Too much items.");
+  }
 });
+
+//Shop stop
 
 //Fight section
 
@@ -159,13 +203,13 @@ const fight = () => {
     game.refill();
     console.log("Enemy dead.");
   }
-
-  //Enemy move
 };
+
+//Fight stop
 
 //Sekcja testowa
 const getRandom = function() {
-  return Math.floor(Math.random() * 5);
+  return Math.floor(Math.random() * 5 + 1);
 };
 
 const randomizePlayerDamage = function() {
@@ -173,7 +217,7 @@ const randomizePlayerDamage = function() {
   for (let i = 0; i < player.stats.length; i++) {
     finalDamage += player.stats[i].value;
   }
-  return Math.floor(finalDamage * 0.1 * player.level * getRandom());
+  return Math.floor(finalDamage * 0.2 * player.level * getRandom());
 };
 
 const randomizeEnemyDamage = function() {
@@ -183,3 +227,36 @@ const randomizeEnemyDamage = function() {
   }
   return Math.floor(finalDamage * 0.1 * enemy.level * getRandom());
 };
+
+
+function getJson()
+{
+  $.getJSON("../items.json", function(json){
+    console.log(json);
+  })
+}
+
+$(".eqb").click(function(event) {
+  let e = event.target.id;
+  let id = event.target.id;
+  id = id.replace("equipment", "");
+  e = e.replace("equipment", "wearing");
+  player.wearing[id] = player.equpiment[id];
+  player.stats[0].value = player.wearing[id].strenght;
+  $("#" + e).html("Nazwa: " + player.equpiment[id].name + " Strength: " + player.equpiment[id].strenght);
+  $("#" + event.target.id).html("");
+  player.equpiment[id] = {id: 0, name: "Empty", cost: 0, strenght: 0, damage: 0}
+  player.stats[0].value -= player.equpiment[id].strenght;
+
+})
+
+$(".eqw").click(function(event){
+  let e = event.target.id;
+  let id = event.target.id;
+  id = id.replace("wearing", "");
+  e = e.replace("wearing", "equipment");
+  player.equpiment[id] = player.wearing[id];
+  $("#" + e).html("Nazwa: " + player.equpiment[id].name + " Strength: " + player.equpiment[id].strenght);
+  $("#" + event.target.id).html("");
+  player.wearing[id] = {id: 0, name: "Empty", cost: 0, strenght: 0, damage: 0}
+});
