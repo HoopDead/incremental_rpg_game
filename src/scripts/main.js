@@ -30,10 +30,10 @@ var player = {
   coins: 0,
   hp: [100, 100], //First value - hp till fight. Second value - max hp.
   stats: [
-    { name: "strenght", value: 0, cost: 10 },
-    { name: "agility", value: 0, cost: 10 },
-    { name: "inteligence", value: 0, cost: 10 },
-    { name: "luck", value: 0, cost: 10 }
+    { name: "strenght", value: 5, cost: 10 }, //damage
+    { name: "agility", value: 5, cost: 10 }, //dodge
+    { name: "inteligence", value: 5, cost: 10 }, //more coins from objects
+    { name: "luck", value: 5, cost: 10 } //add stat in item
   ],
   moves: [
     { id: 0, name: "Basic attack", damage: 3 },
@@ -65,9 +65,6 @@ var player = {
     for (let i = 0; i < this.stats.length; i++) {
       this.stats[i].value += getRandom();
     }
-  },
-  showEq: function(id, name, strenght) {
-      $("#equipment" + id).html("Nazwa: " + name + "Strength: " + strenght);
   },
 };
 
@@ -106,9 +103,9 @@ var enemy = {
 
 //Shop object
 var shop = [
-  { id: 0, name: "Long Sword", cost: 100, strenght: 3, damage: 3},
-  { id: 1, name: "Leather Helmet", cost: 100, strenght: 2, damage: 0},
-  { id: 2, name: "Leather Chestplate", cost: 100, strenght: 3, damage: 0},
+  { id: 0, name: "Long Sword", cost: 100, strenght: 3},
+  { id: 1, name: "Leather Helmet", cost: 100, strenght: 2},
+  { id: 2, name: "Leather Chestplate", cost: 100, strenght: 3},
   { id: 3, name: "Leather Pants", cost: 100, strenght: 2},
   { id: 4, name: "Leather Boots", cost: 100, strenght: 1},
   { id: 5, name: "Iron Amulet", cost: 500, strenght: 5}
@@ -127,8 +124,12 @@ shop.forEach(function(item) {
 
 //New item function - used when player buy item
 const newItem = id => {
-  shop[id] = { id: Number(id), name: "Wooden sword", cost: 999, strenght: 5, damage: 3}
-  $("#" + id).html(shop[id].name + " " + shop[id].cost);
+  $.getJSON("../items.json", function(json){
+    let random = json.items[Math.floor(Math.random() * json.items.length)];
+    Object.assign(random, {cost: 323, strenght: 3});
+    shop[id] = random;
+    $("#" + id).html(shop[id].name + " " + shop[id].cost);
+  });
 };
 
 //Click on item - buy algorithm
@@ -170,30 +171,19 @@ const fight = () => {
   let playerMove =
     player.moves[Math.floor(Math.random() * player.moves.length)];
   let enemyMove = enemy.moves[Math.floor(Math.random() * enemy.moves.length)];
-  let randPlayerDamage = randomizePlayerDamage() * playerMove.damage;
-  let randEnemyDamage = randomizeEnemyDamage() * enemyMove.damage;
+  let randPlayerDamage = randomizePlayerDamage(player.level) * playerMove.damage;
+  let randEnemyDamage = randomizeEnemyDamage(enemy.level) * enemyMove.damage;
+  let playerMessage = `[Round ${game.round}] Player uses: ${playerMove.name} and took ${randPlayerDamage} enemy HP is ${enemy.hp[0]}`;
+  let enemyMessage = `[Round ${game.round}] Enemy uses: ${enemyMove.name} and took ${randEnemyDamage} player HP is ${player.hp[0]}`
+  if(isDodge(player.stats[1].value) == true)
+  {
+    randEnemyDamage = 0;
+    enemyMessage += " [PLAYER DODGES]!";
+  }
   player.hp[0] -= randEnemyDamage;
   enemy.hp[0] -= randPlayerDamage;
-  console.log(
-    "[Round " +
-      game.round +
-      "] Player uses: " +
-      playerMove.name +
-      " and took: " +
-      randPlayerDamage +
-      " enemy HP is: " +
-      enemy.hp[0]
-  );
-  console.log(
-    "[Round " +
-      game.round +
-      "] Enemy uses: " +
-      enemyMove.name +
-      " and took: " +
-      randEnemyDamage +
-      " player HP is: " +
-      player.hp[0]
-  );
+  console.log(playerMessage);
+  console.log(enemyMessage);
   if (player.hp[0] <= 0) {
     game.winner = "Enemy";
     game.refill();
@@ -208,33 +198,43 @@ const fight = () => {
 //Fight stop
 
 //Sekcja testowa
+const isDodge = function(agility) {
+  var sum = 0;
+  player.stats.forEach(function(stat){
+    sum = sum + stat.value;
+  })
+  let random = Math.floor(Math.random() * sum);
+  if(random < agility)
+  {
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+}
+
 const getRandom = function() {
   return Math.floor(Math.random() * 5 + 1);
 };
 
-const randomizePlayerDamage = function() {
+const randomizePlayerDamage = function(min) {
   let finalDamage = 0;
   for (let i = 0; i < player.stats.length; i++) {
     finalDamage += player.stats[i].value;
   }
-  return Math.floor(finalDamage * 0.2 * player.level * getRandom());
+  return Math.floor(Math.random() * (finalDamage - min) + min);
 };
 
-const randomizeEnemyDamage = function() {
+const randomizeEnemyDamage = function(min) {
   let finalDamage = 0;
   for (let i = 0; i < enemy.stats.length; i++) {
     finalDamage += enemy.stats[i].value;
   }
-  return Math.floor(finalDamage * 0.1 * enemy.level * getRandom());
+  return Math.floor(Math.random() * (finalDamage - min) + min);
 };
 
 
-function getJson()
-{
-  $.getJSON("../items.json", function(json){
-    console.log(json);
-  })
-}
 
 $(".eqb").click(function(event) {
   let e = event.target.id;
@@ -242,7 +242,7 @@ $(".eqb").click(function(event) {
   id = id.replace("equipment", "");
   e = e.replace("equipment", "wearing");
   player.wearing[id] = player.equpiment[id];
-  player.stats[0].value = player.wearing[id].strenght;
+  player.stats[0].value += player.wearing[id].strenght;
   $("#" + e).html("Nazwa: " + player.equpiment[id].name + " Strength: " + player.equpiment[id].strenght);
   $("#" + event.target.id).html("");
   player.equpiment[id] = {id: 0, name: "Empty", cost: 0, strenght: 0, damage: 0}
@@ -256,6 +256,7 @@ $(".eqw").click(function(event){
   id = id.replace("wearing", "");
   e = e.replace("wearing", "equipment");
   player.equpiment[id] = player.wearing[id];
+  player.stats[0].value -= player.equpiment[id].strenght;
   $("#" + e).html("Nazwa: " + player.equpiment[id].name + " Strength: " + player.equpiment[id].strenght);
   $("#" + event.target.id).html("");
   player.wearing[id] = {id: 0, name: "Empty", cost: 0, strenght: 0, damage: 0}
