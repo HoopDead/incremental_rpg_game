@@ -15,6 +15,7 @@ var game = {
       player.hp[0] = player.hp[1];
       enemy.hp[0] = enemy.hp[1];
       this.winner = null;
+      renderMoney();
     } else {
       player.hp[0] = player.hp[1];
       enemy.hp[0] = enemy.hp[1];
@@ -27,7 +28,7 @@ var game = {
 
 var player = {
   level: 1,
-  coins: 0,
+  coins: 1000,
   hp: [100, 100], //First value - hp till fight. Second value - max hp.
   stats: [
     { name: "strenght", value: 5, cost: 10 }, //damage
@@ -60,7 +61,7 @@ var player = {
   nextGeneration: function() {
     console.log("Next generation - Player");
     this.level++;
-    this.coins = enemy.drop_coins + enemy.level * getRandom();
+    this.coins = this.coins + enemy.drop_coins + enemy.level * 0.5 * player.stats[2].value;
     this.hp[1] = this.hp[1] * this.level;
     for (let i = 0; i < this.stats.length; i++) {
       this.stats[i].value += getRandom();
@@ -91,7 +92,7 @@ var enemy = {
     console.log("Next generation - Enemy");
     this.level++;
     this.drop_coins =
-      this.drop_coins + (this.level + player.level) * getRandom();
+      this.drop_coins + (this.level + player.level) * getRandom() * 5;
     this.hp[1] = this.hp[1] * this.level;
     for (let i = 0; i < this.stats.length; i++) {
       this.stats[i].value += getRandom();
@@ -126,7 +127,7 @@ shop.forEach(function(item) {
 const newItem = id => {
   $.getJSON("../items.json", function(json){
     let random = json.items[Math.floor(Math.random() * json.items.length)];
-    Object.assign(random, {cost: 323, strenght: 3});
+    Object.assign(random, {cost: game.round * 100, strenght: Math.ceil(game.round * player.level * 0.5)});
     shop[id] = random;
     $("#" + id).html(shop[id].name + " " + shop[id].cost);
   });
@@ -134,19 +135,34 @@ const newItem = id => {
 
 //Click on item - buy algorithm
 $(".itemBuy").click(function(event){
-  if(player.equpiment.length < 7)
+  let e = event.target.id
+  if(player.coins > shop[e].cost)
   {
-    console.log("Buy");
-    let e = event.target.id
-    player.equpiment[e] = shop[e];
-    $("#equipment" + e).html("Nazwa: " + shop[e].name + "Strenght: " + shop[e].strenght);
-    newItem(e);
+    if(player.equpiment.length < 7)
+    {
+      console.log("Buy");
+      player.coins -= shop[e].cost;
+      player.equpiment[e] = shop[e];
+      $("#equipment" + e).html("Nazwa: " + shop[e].name + "Strenght: " + shop[e].strenght);
+      newItem(e);
+      renderMoney();
+    }
+    else
+    {
+      alert("Too much items.");
+    }
   }
   else
   {
-    alert("Too much items.");
+    alert("Not enough money.");
   }
 });
+
+const renderMoney = () => {
+  $("#money").html(player.coins + " coins");
+}
+
+renderMoney(); // Important function.
 
 //Shop stop
 
