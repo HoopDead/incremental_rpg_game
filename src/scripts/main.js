@@ -199,15 +199,19 @@ const fight = () => {
   player.hp[0] -= randEnemyDamage;
   enemy.hp[0] -= randPlayerDamage;
   console.log(playerMessage);
+  $("#logs").append(playerMessage + "\n");
   console.log(enemyMessage);
+  $("#logs").append(enemyMessage + "\n");
+  var textArea = document.getElementById('logs');
+  textArea.scrollTop = textArea.scrollHeight;  
   if (player.hp[0] <= 0) {
     game.winner = "Enemy";
     game.refill();
-    console.log("Player dead.");
+    $("#logs").append("Player dead.\n");
   } else if (enemy.hp[0] <= 0) {
     game.winner = "Player";
     game.refill();
-    console.log("Enemy dead.");
+    $("#logs").append("Enemy dead.\n");
   }
 };
 
