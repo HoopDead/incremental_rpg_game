@@ -6,17 +6,66 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <link rel = "stylesheet" href = "style/main.css">
     <title>Incremental RPG game</title>
+    <link rel="stylesheet" href="style/style.css" />
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+    />
+    <!-- Bootstrap core CSS -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Material Design Bootstrap -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.8.7/css/mdb.min.css"
+      rel="stylesheet"
+    />
     <!-- JQuery -->
     <script
-      src="https://code.jquery.com/jquery-3.4.1.js"
-      integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
-      crossorigin="anonymous"
+      type="text/javascript"
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"
     ></script>
+    <!-- Bootstrap tooltips -->
+    <script
+      type="text/javascript"
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"
+    ></script>
+    <!-- Bootstrap core JavaScript -->
+    <script
+      type="text/javascript"
+      src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"
+    ></script>
+    <!-- MDB core JavaScript -->
+    <script
+      type="text/javascript"
+      src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.8.7/js/mdb.min.js"
+    ></script>
+    <!-- Font -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Quicksand&display=swap"
+      rel="stylesheet"
+    />
+    <script src = "rpgui.min.js"></script>
+    <link rel = "stylesheet" href = "rpgui.min.css">
+    <style>
+    p{
+      margin-top: 12px !important;
+    }
+    </style>
   </head>
 
   <body>
-    <button id="startfight">Test fight</button>
-    <button id="basicattack">Basic atack</button>
+      <div class="rpgui-content">
+          <div class = "col-sm-12 text-center">
+            <button class="rpgui-button golden mx-3" type="button" id = "startfight"><p>Test fight</p></button>
+            <button class = "rpgui-button golden mx-3" type = "button" id = "basicattack"><p>Basic attack</p></button>
+            <div class="rpgui-container framed-golden">
+              <input>
+            </div>
+          </div>
+      </div>
     <div>Your money: <p id = "money"></p></div>
     <div id = "shop">Shop:<br></div>
     <h5>Backpack: </h5>

@@ -2,3 +2,8 @@ textarea
 {
     overflow: hidden;
 }
+
+.rpgui-container {
+    height:540px;
+    width:280px;
+}
