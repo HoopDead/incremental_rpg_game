@@ -67,6 +67,14 @@ var player = {
       this.stats[i].value += getRandom();
     }
   },
+  displayStats: function() {
+    console.log("Display stats");
+    for(stat of this.stats)
+    {
+      $("#stats").replaceWith(firstToUpper(stat.name) + ": " + stat.value + "<br>");
+      console.log(firstToUpper(stat.name) + ": " + stat.value);
+    }
+  }
 };
 
 //Enemy section
@@ -254,6 +262,10 @@ const randomizeEnemyDamage = function(min) {
   return Math.floor(Math.random() * (finalDamage - min) + min);
 };
 
+const firstToUpper = (text) => {
+  if(typeof text !== 'string') return ''
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
 
 
 $(".eqb").click(function(event) {

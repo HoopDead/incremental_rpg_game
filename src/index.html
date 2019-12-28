@@ -43,10 +43,7 @@
       src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.8.7/js/mdb.min.js"
     ></script>
     <!-- Font -->
-    <link
-      href="https://fonts.googleapis.com/css?family=Quicksand&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap" rel="stylesheet">
     <script src = "rpgui.min.js"></script>
     <link rel = "stylesheet" href = "rpgui.min.css">
     <style>
@@ -57,7 +54,7 @@
   </head>
 
   <body>
-      <div class="rpgui-content">
+      <!-- <div class="rpgui-content">
           <div class = "col-sm-12 text-center">
             <button class="rpgui-button golden mx-3" type="button" id = "startfight"><p>Test fight</p></button>
             <button class = "rpgui-button golden mx-3" type = "button" id = "basicattack"><p>Basic attack</p></button>
@@ -65,6 +62,17 @@
               <input>
             </div>
           </div>
+      </div> -->
+      <div class="rpgui-container">
+        <div class="rpgui-container framed-golden text-center col-sm-12 col-lg-4">
+          <h5>Player</h5>
+          <hr class="golden">
+          <label>Health:</label>
+          <div class="rpgui-progress red"></div>
+          <button class="rpgui-button golden mx-3" type="button" id = "startfight"><p>Test fight</p></button>
+          <button class = "rpgui-button golden mx-3" type = "button" id = "basicattack"><p>Basic attack</p></button>
+          <div id = "stats"></div>
+        </div>
       </div>
     <div>Your money: <p id = "money"></p></div>
     <div id = "shop">Shop:<br></div>

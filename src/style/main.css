@@ -1,3 +1,14 @@
+body
+{
+    background-color: #222222 !important;
+}
+
+p, div
+{
+    color: white;
+    font-family: 'Press Start 2P';
+}
+
 textarea
 {
     overflow: hidden;
