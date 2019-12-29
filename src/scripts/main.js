@@ -24,6 +24,12 @@ var game = {
   }
 };
 
+const firstToUpper = (text) => {
+  if(typeof text !== 'string') return ''
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
+
+
 //Main character section
 
 var player = {
@@ -31,7 +37,7 @@ var player = {
   coins: 1000,
   hp: [100, 100], //First value - hp till fight. Second value - max hp.
   stats: [
-    { name: "strenght", value: 5, cost: 10 }, //damage
+    { name: "strength", value: 5, cost: 10 }, //damage
     { name: "agility", value: 5, cost: 10 }, //dodge
     { name: "inteligence", value: 5, cost: 10 }, //more coins from objects
     { name: "luck", value: 5, cost: 10 } //add stat in item
@@ -43,20 +49,20 @@ var player = {
     { id: 3, name: "Energy Arrow", damage: 5 }
   ],
   equpiment: [
-    { id: 0, name: "Empty", cost: 0, strenght: 0, damage: 0},
-    { id: 1, name: "Empty", cost: 0, strenght: 0, damage: 0},
-    { id: 2, name: "Empty", cost: 0, strenght: 0, damage: 0},
-    { id: 3, name: "Empty", cost: 0, strenght: 0, damage: 0},
-    { id: 4, name: "Empty", cost: 0, strenght: 0, damage: 0},
-    { id: 5, name: "Empty", cost: 0, strenght: 0, damage: 0},
+    { id: 0, name: "Empty", cost: 0, strength: 0, damage: 0},
+    { id: 1, name: "Empty", cost: 0, strength: 0, damage: 0},
+    { id: 2, name: "Empty", cost: 0, strength: 0, damage: 0},
+    { id: 3, name: "Empty", cost: 0, strength: 0, damage: 0},
+    { id: 4, name: "Empty", cost: 0, strength: 0, damage: 0},
+    { id: 5, name: "Empty", cost: 0, strength: 0, damage: 0},
   ],
   wearing: [
-    { id: 0, name: "Empty", cost: 0, strenght: 0, damage: 0},
-    { id: 1, name: "Empty", cost: 0, strenght: 0, damage: 0},
-    { id: 2, name: "Empty", cost: 0, strenght: 0, damage: 0},
-    { id: 3, name: "Empty", cost: 0, strenght: 0, damage: 0},
-    { id: 4, name: "Empty", cost: 0, strenght: 0, damage: 0},
-    { id: 5, name: "Empty", cost: 0, strenght: 0, damage: 0},
+    { id: 0, name: "Empty", cost: 0, strength: 0, damage: 0},
+    { id: 1, name: "Empty", cost: 0, strength: 0, damage: 0},
+    { id: 2, name: "Empty", cost: 0, strength: 0, damage: 0},
+    { id: 3, name: "Empty", cost: 0, strength: 0, damage: 0},
+    { id: 4, name: "Empty", cost: 0, strength: 0, damage: 0},
+    { id: 5, name: "Empty", cost: 0, strength: 0, damage: 0},
   ],
   nextGeneration: function() {
     console.log("Next generation - Player");
@@ -68,11 +74,10 @@ var player = {
     }
   },
   displayStats: function() {
-    console.log("Display stats");
+    $("#hp").html("HP: " + player.hp[0] + "/" + player.hp[1]);
     for(stat of this.stats)
     {
-      $("#stats").replaceWith(firstToUpper(stat.name) + ": " + stat.value + "<br>");
-      console.log(firstToUpper(stat.name) + ": " + stat.value);
+      $("#" + stat.name).html(firstToUpper(stat.name) + ": " + stat.value + "<br>");
     }
   }
 };
@@ -84,7 +89,7 @@ var enemy = {
   drop_coins: 150,
   hp: [125, 125], //First value - hp till fight. Second value - max hp.
   stats: [
-    { name: "strenght", value: 5, cost: 10 },
+    { name: "strength", value: 5, cost: 10 },
     { name: "agility", value: 5, cost: 10 },
     { name: "inteligence", value: 5, cost: 10 },
     { name: "luck", value: 5, cost: 10 }
@@ -112,12 +117,12 @@ var enemy = {
 
 //Shop object
 var shop = [
-  { id: 0, name: "Long Sword", cost: 100, strenght: 3},
-  { id: 1, name: "Leather Helmet", cost: 100, strenght: 2},
-  { id: 2, name: "Leather Chestplate", cost: 100, strenght: 3},
-  { id: 3, name: "Leather Pants", cost: 100, strenght: 2},
-  { id: 4, name: "Leather Boots", cost: 100, strenght: 1},
-  { id: 5, name: "Iron Amulet", cost: 500, strenght: 5}
+  { id: 0, name: "Long Sword", cost: 100, strength: 3},
+  { id: 1, name: "Leather Helmet", cost: 100, strength: 2},
+  { id: 2, name: "Leather Chestplate", cost: 100, strength: 3},
+  { id: 3, name: "Leather Pants", cost: 100, strength: 2},
+  { id: 4, name: "Leather Boots", cost: 100, strength: 1},
+  { id: 5, name: "Iron Amulet", cost: 500, strength: 5}
 ];
 
 
@@ -135,7 +140,7 @@ shop.forEach(function(item) {
 const newItem = id => {
   $.getJSON("../items.json", function(json){
     let random = json.items[Math.floor(Math.random() * json.items.length)];
-    Object.assign(random, {cost: game.round * 100, strenght: Math.ceil(game.round * player.level * 0.5)});
+    Object.assign(random, {cost: game.round * 100, strength: Math.ceil(game.round * player.level * 0.5)});
     shop[id] = random;
     $("#" + id).html(shop[id].name + " " + shop[id].cost);
   });
@@ -151,7 +156,7 @@ $(".itemBuy").click(function(event){
       console.log("Buy");
       player.coins -= shop[e].cost;
       player.equpiment[e] = shop[e];
-      $("#equipment" + e).html("Nazwa: " + shop[e].name + "Strenght: " + shop[e].strenght);
+      $("#equipment" + e).html("Nazwa: " + shop[e].name + "strength: " + shop[e].strength);
       newItem(e);
       renderMoney();
     }
@@ -171,6 +176,8 @@ const renderMoney = () => {
 }
 
 renderMoney(); // Important function.
+player.displayStats();
+
 
 //Shop stop
 
@@ -199,13 +206,14 @@ const fight = () => {
   let randEnemyDamage = randomizeEnemyDamage(enemy.level) * enemyMove.damage;
   let playerMessage = `[Round ${game.round}] Player uses: ${playerMove.name} and took ${randPlayerDamage} enemy HP is ${enemy.hp[0]}`;
   let enemyMessage = `[Round ${game.round}] Enemy uses: ${enemyMove.name} and took ${randEnemyDamage} player HP is ${player.hp[0]}`
-  if(isDodge(player.stats[1].value) == true)
+  if(isDodge(player.stats[1].value))
   {
     randEnemyDamage = 0;
     enemyMessage += " [PLAYER DODGES]!";
   }
   player.hp[0] -= randEnemyDamage;
   enemy.hp[0] -= randPlayerDamage;
+  $(".rpgui-progress-fill").css("width", `${player.hp[0] / player.hp[1] * 100}%`);
   console.log(playerMessage);
   $("#logs").append(playerMessage + "\n");
   console.log(enemyMessage);
@@ -220,7 +228,9 @@ const fight = () => {
     game.winner = "Player";
     game.refill();
     $("#logs").append("Enemy dead.\n");
+    player.displayStats();
   }
+  player.displayStats();
 };
 
 //Fight stop
@@ -262,11 +272,6 @@ const randomizeEnemyDamage = function(min) {
   return Math.floor(Math.random() * (finalDamage - min) + min);
 };
 
-const firstToUpper = (text) => {
-  if(typeof text !== 'string') return ''
-  return text.charAt(0).toUpperCase() + text.slice(1);
-}
-
 
 $(".eqb").click(function(event) {
   let e = event.target.id;
@@ -274,11 +279,11 @@ $(".eqb").click(function(event) {
   id = id.replace("equipment", "");
   e = e.replace("equipment", "wearing");
   player.wearing[id] = player.equpiment[id];
-  player.stats[0].value += player.wearing[id].strenght;
-  $("#" + e).html("Nazwa: " + player.equpiment[id].name + " Strength: " + player.equpiment[id].strenght);
+  player.stats[0].value += player.wearing[id].strength;
+  $("#" + e).html("Nazwa: " + player.equpiment[id].name + " Strength: " + player.equpiment[id].strength);
   $("#" + event.target.id).html("");
-  player.equpiment[id] = {id: 0, name: "Empty", cost: 0, strenght: 0, damage: 0}
-  player.stats[0].value -= player.equpiment[id].strenght;
+  player.equpiment[id] = {id: 0, name: "Empty", cost: 0, strength: 0, damage: 0}
+  player.stats[0].value -= player.equpiment[id].strength;
 
 })
 
@@ -288,8 +293,8 @@ $(".eqw").click(function(event){
   id = id.replace("wearing", "");
   e = e.replace("wearing", "equipment");
   player.equpiment[id] = player.wearing[id];
-  player.stats[0].value -= player.equpiment[id].strenght;
-  $("#" + e).html("Nazwa: " + player.equpiment[id].name + " Strength: " + player.equpiment[id].strenght);
+  player.stats[0].value -= player.equpiment[id].strength;
+  $("#" + e).html("Nazwa: " + player.equpiment[id].name + " Strength: " + player.equpiment[id].strength);
   $("#" + event.target.id).html("");
-  player.wearing[id] = {id: 0, name: "Empty", cost: 0, strenght: 0, damage: 0}
+  player.wearing[id] = {id: 0, name: "Empty", cost: 0, strength: 0, damage: 0}
 });
