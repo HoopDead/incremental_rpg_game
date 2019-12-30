@@ -204,6 +204,8 @@ const fight = () => {
   let enemyMove = enemy.moves[Math.floor(Math.random() * enemy.moves.length)];
   let randPlayerDamage = randomizePlayerDamage(player.level) * playerMove.damage;
   let randEnemyDamage = randomizeEnemyDamage(enemy.level) * enemyMove.damage;
+  player.hp[0] -= randEnemyDamage;
+  enemy.hp[0] -= randPlayerDamage;
   let playerMessage = `[Round ${game.round}] Player uses: ${playerMove.name} and took ${randPlayerDamage} enemy HP is ${enemy.hp[0]}`;
   let enemyMessage = `[Round ${game.round}] Enemy uses: ${enemyMove.name} and took ${randEnemyDamage} player HP is ${player.hp[0]}`
   if(isDodge(player.stats[1].value))
@@ -211,15 +213,13 @@ const fight = () => {
     randEnemyDamage = 0;
     enemyMessage += " [PLAYER DODGES]!";
   }
-  player.hp[0] -= randEnemyDamage;
-  enemy.hp[0] -= randPlayerDamage;
   $(".rpgui-progress-fill").css("width", `${player.hp[0] / player.hp[1] * 100}%`);
   console.log(playerMessage);
   $("#logs").append(playerMessage + "\n");
   console.log(enemyMessage);
   $("#logs").append(enemyMessage + "\n");
   var textArea = document.getElementById('logs');
-  textArea.scrollTop = textArea.scrollHeight;  
+  textArea.scrollTop = textArea.scrollHeight;
   if (player.hp[0] <= 0) {
     game.winner = "Enemy";
     game.refill();
