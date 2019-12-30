@@ -172,7 +172,7 @@ $(".itemBuy").click(function(event){
 });
 
 const renderMoney = () => {
-  $("#money").html(player.coins + " coins");
+    $("#money").html(player.coins + "<img class = 'mx-1' width = '24' height = '24' src = './img/own/4.png'></img>");
 }
 
 renderMoney(); // Important function.
@@ -199,8 +199,7 @@ $("#basicattack").click(function() {
 });
 
 const fight = () => {
-  let playerMove =
-    player.moves[Math.floor(Math.random() * player.moves.length)];
+  let playerMove = player.moves[Math.floor(Math.random() * player.moves.length)];
   let enemyMove = enemy.moves[Math.floor(Math.random() * enemy.moves.length)];
   let randPlayerDamage = randomizePlayerDamage(player.level) * playerMove.damage;
   let randEnemyDamage = randomizeEnemyDamage(enemy.level) * enemyMove.damage;
@@ -223,11 +222,11 @@ const fight = () => {
   if (player.hp[0] <= 0) {
     game.winner = "Enemy";
     game.refill();
-    $("#logs").append("Player dead.\n");
+    $("#logs").append("Player dead.\n ============ \n");
   } else if (enemy.hp[0] <= 0) {
     game.winner = "Player";
     game.refill();
-    $("#logs").append("Enemy dead.\n");
+    $("#logs").append("Enemy dead.\n ========== \n");
     player.displayStats();
   }
   player.displayStats();

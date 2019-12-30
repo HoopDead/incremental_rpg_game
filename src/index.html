@@ -51,37 +51,38 @@
       margin-top: 12px !important;
     }
     </style>
+
   </head>
 
   <body>
-      <!-- <div class="rpgui-content">
-          <div class = "col-sm-12 text-center">
-            <button class="rpgui-button golden mx-3" type="button" id = "startfight"><p>Test fight</p></button>
-            <button class = "rpgui-button golden mx-3" type = "button" id = "basicattack"><p>Basic attack</p></button>
-            <div class="rpgui-container framed-golden">
-              <input>
-            </div>
-          </div>
-      </div> -->
-      <div class="rpgui-container">
-        <div class="rpgui-container framed-golden text-center col-sm-12 col-lg-4">
-          <h5>Player</h5>
-          <hr class="golden">
-          <label>Health:</label>
-          <div class="rpgui-progress"></div>
-          <div id = "stats" class = "mt-4">
-            <div id = "hp"></div>
-            <div id = "strength"></div>
-            <div id = "agility"></div>
-            <div id = "inteligence"></div>
-            <div id = "luck"></div>
-          </div>
-          <button class="rpgui-button golden mx-3 mt-3" type="button" id = "startfight"><p>Test fight</p></button>
-          <button class = "rpgui-button golden mx-3 mt-3" type = "button" id = "basicattack"><p>Basic attack</p></button>
+    <div class="rpgui-content row">
+      <div class = "col-lg-2 col-sm-12">
+      <div class="rpgui-container framed-golden text-center">
+        <h5>Player</h5>
+        <hr class="golden">
+        <label>Health:</label>
+        <div class="rpgui-progress"></div>
+        <div id = "stats" class = "mt-4">
+          <div class = "text-center"><p class = "text-center mx-auto" id = "money"></p></div>
+          <div id = "hp"></div>
+          <div id = "strength"></div>
+          <div id = "agility"></div>
+          <div id = "inteligence"></div>
+          <div id = "luck"></div>
         </div>
+        <button class="rpgui-button golden mx-3 mt-3" type="button" id = "startfight"><p>Test fight</p></button>
+        <button class = "rpgui-button golden mx-3 mt-3" type = "button" id = "basicattack"><p>Basic attack</p></button>
       </div>
-    <div>Your money: <p id = "money"></p></div>
-    <div id = "shop">Shop:<br></div>
+    </div>
+    <div class = "col-lg-6 mx-auto col-sm-12">
+      <textarea id = "logs" style = "height: 500px;"></textarea>
+    </div>
+    <div class="col-lg-2 col-sm-12">
+      <div class="rpgui-container framed-golden text-center col-lg-2 col-sm-12">
+      </div>
+  </div>
+    
+    <!-- <div id = "shop">Shop:<br></div>
     <h5>Backpack: </h5>
     <div id = "equipment0" class = "eqb"></div>
     <div id = "equipment1" class = "eqb"></div>
@@ -95,11 +96,7 @@
     <div id = "wearing2" class = "eqw"></div>
     <div id = "wearing3" class = "eqw"></div>
     <div id = "wearing4" class = "eqw"></div>
-    <div id = "wearing5" class = "eqw"></div>
-    <textarea rows = "25" cols = "100" id = "logs"></textarea>
-
-
-
+    <div id = "wearing5" class = "eqw"></div> -->
     <script src="scripts/main.js"></script>
   </body>
 </html>

@@ -6,16 +6,9 @@ body
 p, div
 {
     color: white;
-    font-family: 'Press Start 2P';
 }
 
 textarea
 {
     overflow: hidden;
-}
-
-
-.rpgui-container {
-    height:540px;
-    width:280px;
 }
