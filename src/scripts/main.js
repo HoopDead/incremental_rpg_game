@@ -1,5 +1,4 @@
 //Game section
-
 var game = {
   isFight: false,
   round: 1,
@@ -12,6 +11,8 @@ var game = {
       console.log("Next gen start");
       player.nextGeneration();
       enemy.nextGeneration();
+      player.displayStats();
+      enemy.displayStats();
       player.hp[0] = player.hp[1];
       enemy.hp[0] = enemy.hp[1];
       this.winner = null;
@@ -21,8 +22,17 @@ var game = {
       enemy.hp[0] = enemy.hp[1];
       this.winner = null;
     }
-  }
+  },
 };
+
+var globalhtml = {
+  updateHp: function() {
+    $(".rpgui-progress-fill").eq(0).css("width", `${player.hp[0] / player.hp[1] * 100}%`);
+    $(".rpgui-progress-fill").eq(1).css("width", `${enemy.hp[0] / enemy.hp[1] * 100}%`);
+    $("#hp-player").html("HP: " + player.hp[0] + "/" + player.hp[1]);
+    $("#hp-enemy").html("HP: " + enemy.hp[0] + "/" + enemy.hp[1]);
+  }
+}
 
 const firstToUpper = (text) => {
   if(typeof text !== 'string') return ''
@@ -74,10 +84,10 @@ var player = {
     }
   },
   displayStats: function() {
-    $("#hp").html("HP: " + player.hp[0] + "/" + player.hp[1]);
+    $("#hp-player").html("HP: " + player.hp[0] + "/" + player.hp[1]);
     for(stat of this.stats)
     {
-      $("#" + stat.name).html(firstToUpper(stat.name) + ": " + stat.value + "<br>");
+      $("#player-" + stat.name).html(firstToUpper(stat.name) + ": " + stat.value + "<br>");
     }
   }
 };
@@ -109,6 +119,15 @@ var enemy = {
     this.hp[1] = this.hp[1] * this.level;
     for (let i = 0; i < this.stats.length; i++) {
       this.stats[i].value += getRandom();
+    }
+  },
+  displayStats: function() {
+    $("#hp-enemy").html("HP: " + enemy.hp[0] + "/" + enemy.hp[1]);
+    $("#drop-coins").html("Drop: " + this.drop_coins + " coins");
+
+    for(stat of this.stats)
+    {
+      $("#enemy-" + stat.name).html(firstToUpper(stat.name) + ": " + stat.value + "<br>");
     }
   }
 };
@@ -177,7 +196,7 @@ const renderMoney = () => {
 
 renderMoney(); // Important function.
 player.displayStats();
-
+enemy.displayStats();
 
 //Shop stop
 
@@ -205,6 +224,7 @@ const fight = () => {
   let randEnemyDamage = randomizeEnemyDamage(enemy.level) * enemyMove.damage;
   player.hp[0] -= randEnemyDamage;
   enemy.hp[0] -= randPlayerDamage;
+  globalhtml.updateHp();
   let playerMessage = `[Round ${game.round}] Player uses: ${playerMove.name} and took ${randPlayerDamage} enemy HP is ${enemy.hp[0]}`;
   let enemyMessage = `[Round ${game.round}] Enemy uses: ${enemyMove.name} and took ${randEnemyDamage} player HP is ${player.hp[0]}`
   if(isDodge(player.stats[1].value))
@@ -212,7 +232,6 @@ const fight = () => {
     randEnemyDamage = 0;
     enemyMessage += " [PLAYER DODGES]!";
   }
-  $(".rpgui-progress-fill").css("width", `${player.hp[0] / player.hp[1] * 100}%`);
   console.log(playerMessage);
   $("#logs").append(playerMessage + "\n");
   console.log(enemyMessage);
@@ -227,9 +246,7 @@ const fight = () => {
     game.winner = "Player";
     game.refill();
     $("#logs").append("Enemy dead.\n ========== \n");
-    player.displayStats();
   }
-  player.displayStats();
 };
 
 //Fight stop
@@ -251,6 +268,7 @@ const isDodge = function(agility) {
   }
 }
 
+//RANDOM SECTION
 const getRandom = function() {
   return Math.floor(Math.random() * 5 + 1);
 };
@@ -272,6 +290,8 @@ const randomizeEnemyDamage = function(min) {
 };
 
 
+
+//HTML SECTION
 $(".eqb").click(function(event) {
   let e = event.target.id;
   let id = event.target.id;
@@ -297,3 +317,4 @@ $(".eqw").click(function(event){
   $("#" + event.target.id).html("");
   player.wearing[id] = {id: 0, name: "Empty", cost: 0, strength: 0, damage: 0}
 });
+

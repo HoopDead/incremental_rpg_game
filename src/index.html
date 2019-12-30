@@ -56,29 +56,55 @@
 
   <body>
     <div class="rpgui-content row">
-      <div class = "col-lg-2 col-sm-12">
-      <div class="rpgui-container framed-golden text-center">
+      <div class="rpgui-container framed-golden text-center" id = "player-container">
         <h5>Player</h5>
         <hr class="golden">
         <label>Health:</label>
         <div class="rpgui-progress"></div>
-        <div id = "stats" class = "mt-4">
+        <div id = "player-stats" class = "mt-4">
           <div class = "text-center"><p class = "text-center mx-auto" id = "money"></p></div>
-          <div id = "hp"></div>
-          <div id = "strength"></div>
-          <div id = "agility"></div>
-          <div id = "inteligence"></div>
-          <div id = "luck"></div>
+          <div id = "hp-player"></div>
+          <div id = "player-strength"></div>
+          <div id = "player-agility"></div>
+          <div id = "player-inteligence"></div>
+          <div id = "player-luck"></div>
+        </div>
+        <div class = "my-3">
+          <div class="rpgui-icon weapon-slot"></div>
+          <div class="rpgui-icon shield-slot"></div>
+          <div class="rpgui-icon armor-slot"></div>
+          <div class="rpgui-icon helmet-slot"></div>
+          <div class="rpgui-icon ring-slot"></div>
+          <div class="rpgui-icon potion-slot"></div>
+          <h3>Backpack: </h3>
+          <div class="rpgui-icon weapon-slot"></div>
+          <div class="rpgui-icon shield-slot"></div>
+          <div class="rpgui-icon armor-slot"></div>
+          <div class="rpgui-icon helmet-slot"></div>
+          <div class="rpgui-icon ring-slot"></div>
+          <div class="rpgui-icon potion-slot"></div>
         </div>
         <button class="rpgui-button golden mx-3 mt-3" type="button" id = "startfight"><p>Test fight</p></button>
         <button class = "rpgui-button golden mx-3 mt-3" type = "button" id = "basicattack"><p>Basic attack</p></button>
       </div>
-    </div>
-    <div class = "col-lg-6 mx-auto col-sm-12">
-      <textarea id = "logs" style = "height: 500px;"></textarea>
-    </div>
-    <div class="col-lg-2 col-sm-12">
-      <div class="rpgui-container framed-golden text-center col-lg-2 col-sm-12">
+      <div id = "logs-container">
+      <textarea class = "rpgui-container framed-golden-2" id = "logs"></textarea>
+      <div class = "rpgui-container framed-grey" id = "shop"></div>
+      </div>
+      <div class="rpgui-container framed-golden text-center" id = "enemy-container">
+        <h5>Enemy</h5>
+        <hr class="golden">
+        <label>Health:</label>
+        <div class="rpgui-progress" id = "enemy-progress"></div>
+        <div id = "enemy-stats" class = "mt-4">
+          <div class = "text-center"><p class = "text-center mx-auto" id = "money"></p></div>
+          <div id = "hp-enemy"></div>
+          <div id = "enemy-strength"></div>
+          <div id = "enemy-agility"></div>
+          <div id = "enemy-inteligence"></div>
+          <div id = "enemy-luck"></div>
+          <div id = "drop-coins"></div>
+        </div>
       </div>
   </div>
     

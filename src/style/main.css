@@ -12,3 +12,28 @@ textarea
 {
     overflow: hidden;
 }
+
+#player-container, #enemy-container, #logs-container
+{
+    margin: auto;
+    width: 540px;
+    height: 750px;
+    position: relative;
+}
+
+
+#logs
+{
+    margin: auto;
+    width: 600px;
+    height: 540px;
+    position: relative;
+}
+
+#shop
+{
+    text-align: center;
+    margin: auto;
+    position: relative;
+    width: 400px;
+}
